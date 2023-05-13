@@ -22,7 +22,26 @@ export class BuzzverseServer {
         this.startServer(this.app);
     }
 
-    private securityMiddleware(app: Application): void {}
+    private securityMiddleware(app: Application): void {
+        app.use(
+            cookieSession({
+                name: 'session',
+                keys: ['test1', 'test2'],
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                secure: false
+            })
+        );
+        app.use(hpp());
+        app.use(helmet());
+        app.use(
+            cors({
+                origin: '*',
+                credentials: true,
+                optionsSuccessStatus: 200,
+                methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+            })
+        );
+    }
 
     private standardMiddleware(app: Application): void {}
 
