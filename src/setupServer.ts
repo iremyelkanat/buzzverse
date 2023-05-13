@@ -15,7 +15,7 @@ import cookieSession from 'cookie-session';
 import HTTP_STATUS from 'http-status-codes';
 import 'express-async-errors';
 
-const SERVER_PORT = 5000;
+const SERVER_PORT = 5050;
 
 export class BuzzverseServer {
     private app: Application;
