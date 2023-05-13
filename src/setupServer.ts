@@ -1,8 +1,16 @@
-import {Application, json, urlencoded, Response, Request, NextFunction} from 'express';
+import {
+    Application,
+    json,
+    urlencoded,
+    Response,
+    Request,
+    NextFunction,
+} from 'express';
 import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
 import hpp from 'hpp';
+import compression from 'compression';
 import cookieSession from 'cookie-session';
 import HTTP_STATUS from 'http-status-codes';
 import 'express-async-errors';
@@ -28,7 +36,7 @@ export class BuzzverseServer {
                 name: 'session',
                 keys: ['test1', 'test2'],
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-                secure: false
+                secure: false,
             })
         );
         app.use(hpp());
@@ -38,12 +46,16 @@ export class BuzzverseServer {
                 origin: '*',
                 credentials: true,
                 optionsSuccessStatus: 200,
-                methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+                methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             })
         );
     }
 
-    private standardMiddleware(app: Application): void {}
+    private standardMiddleware(app: Application): void {
+        app.use(compression());
+        app.use(json({ limit: '50mb' }));
+        app.use(urlencoded({ extended: true, limit: '50mb' }));
+    }
 
     private routesMiddleware(app: Application): void {}
 
