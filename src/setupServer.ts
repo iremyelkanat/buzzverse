@@ -19,6 +19,7 @@ import { createAdapter } from '@socket.io/redis-adapter';
 import 'express-async-errors';
 
 import { config } from './config';
+import applicationRoutes from './routes';
 
 const SERVER_PORT = 5050;
 
@@ -64,7 +65,9 @@ export class BuzzverseServer {
         app.use(urlencoded({ extended: true, limit: '50mb' }));
     }
 
-    private routesMiddleware(app: Application): void {}
+    private routesMiddleware(app: Application): void {
+        applicationRoutes(app);
+    }
 
     private globalErrorMiddleware(app: Application): void {}
 
