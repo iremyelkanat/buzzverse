@@ -1,3 +1,4 @@
+import { JoiRequestValidationError } from './shared/globals/helpers/errorHandler';
 import express, { Express } from 'express';
 
 import { BuzzverseServer } from './setupServer';

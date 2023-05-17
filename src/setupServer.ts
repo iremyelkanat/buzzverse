@@ -1,4 +1,8 @@
 import {
+    CustomError,
+    IErrorResponse,
+} from './shared/globals/helpers/errorHandler';
+import {
     Application,
     json,
     urlencoded,
@@ -69,7 +73,30 @@ export class BuzzverseServer {
         applicationRoutes(app);
     }
 
-    private globalErrorMiddleware(app: Application): void {}
+    private globalErrorMiddleware(app: Application): void {
+        app.all('*', (req: Request, res: Response) => {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: `${req.originalUrl} not found`,
+            });
+        });
+
+        app.use(
+            (
+                error: IErrorResponse,
+                _req: Request,
+                res: Response,
+                next: NextFunction
+            ) => {
+                console.log(error);
+                if (error instanceof CustomError) {
+                    return res
+                        .status(error.statusCode)
+                        .json(error.serializeErrors());
+                }
+                next();
+            }
+        );
+    }
 
     private async startServer(app: Application): Promise<void> {
         try {
