@@ -40,7 +40,7 @@ export class BuzzverseServer {
         this.securityMiddleware(this.app);
         this.standardMiddleware(this.app);
         this.routesMiddleware(this.app);
-        this.globalErrorMiddleware(this.app);
+        this.globalErrorHandler(this.app);
         this.startServer(this.app);
     }
 
@@ -75,7 +75,7 @@ export class BuzzverseServer {
         applicationRoutes(app);
     }
 
-    private globalErrorMiddleware(app: Application): void {
+    private globalErrorHandler(app: Application): void {
         app.all('*', (req: Request, res: Response) => {
             res.status(HTTP_STATUS.NOT_FOUND).json({
                 message: `${req.originalUrl} not found`,
