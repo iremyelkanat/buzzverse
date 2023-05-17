@@ -17,6 +17,7 @@ import hpp from 'hpp';
 import compression from 'compression';
 import cookieSession from 'cookie-session';
 import HTTP_STATUS from 'http-status-codes';
+import Logger from 'bunyan';
 import { Server } from 'socket.io';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
@@ -26,6 +27,7 @@ import { config } from './config';
 import applicationRoutes from './routes';
 
 const SERVER_PORT = 5050;
+const log: Logger = config.createLogger('server');
 
 export class BuzzverseServer {
     private app: Application;
@@ -87,7 +89,7 @@ export class BuzzverseServer {
                 res: Response,
                 next: NextFunction
             ) => {
-                console.log(error);
+                log.error(error);
                 if (error instanceof CustomError) {
                     return res
                         .status(error.statusCode)
@@ -105,7 +107,7 @@ export class BuzzverseServer {
             this.startHttpServer(httpServer);
             this.socketIOConnections(socketIO);
         } catch (error) {
-            console.log(error);
+            log.error(error);
         }
     }
 
@@ -124,9 +126,9 @@ export class BuzzverseServer {
     }
 
     private startHttpServer(httpServer: http.Server): void {
-        console.log(`Server has started with process ${process.pid}`);
+        log.info(`Server has started with process ${process.pid}`);
         httpServer.listen(SERVER_PORT, () => {
-            console.log(`Server running on port ${SERVER_PORT}`);
+            log.info(`Server running on port ${SERVER_PORT}`);
         });
     }
 
